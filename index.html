@@ -46,258 +46,642 @@ table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-bottom:1px s
 </head>
 <body>
 <div id="app"></div>
+
+<!--
+  CARA MENAMBAH DATA (semua ada di blok JSON "game-data" di bawah):
+  - Kata baru   : tambahkan satu baris di "words", pisahkan dengan koma.
+                  "zone" = id zona. Tanda [ ] pada "sentence" menandai kata yang digarisbawahi.
+  - Zona baru   : tambahkan satu baris di "zones" dengan "id" berikutnya (11, 12, ...).
+                  level 1-3 | choices = jumlah pilihan jawaban | reverseChance = peluang soal dibalik (0 - 1)
+  - Aturan game : ubah angka di objek CONFIG pada bagian <script> terakhir.
+  Catatan JSON: pakai tanda kutip ganda, tanpa koma di akhir baris terakhir.
+  Jika ada salah ketik, game akan menampilkan pesan kesalahan di layar.
+-->
+<script type="application/json" id="game-data">
+{
+  "zones": [
+    {"id":1,"name":"Gerbang Safari","emoji":"🚪","level":1,"mascot":"🐘","choices":3,"reverseChance":0},
+    {"id":2,"name":"Kandang Kelinci","emoji":"🐰","level":1,"mascot":"🐰","choices":3,"reverseChance":0},
+    {"id":3,"name":"Taman Waktu","emoji":"⏰","level":1,"mascot":"🦒","choices":3,"reverseChance":0},
+    {"id":4,"name":"Rumah Bentuk","emoji":"🔺","level":2,"mascot":"🐒","choices":3,"reverseChance":0},
+    {"id":5,"name":"Pos Penimbangan","emoji":"📏","level":2,"mascot":"🦁","choices":3,"reverseChance":0},
+    {"id":6,"name":"Kandang Hewan Besar","emoji":"🐧","level":2,"mascot":"🐧","choices":4,"reverseChance":0},
+    {"id":7,"name":"Gudang Perlengkapan","emoji":"🧵","level":3,"mascot":"🐯","choices":4,"reverseChance":0},
+    {"id":8,"name":"Laboratorium Bentuk","emoji":"🔷","level":3,"mascot":"🦓","choices":4,"reverseChance":0.3},
+    {"id":9,"name":"Pondok Hitung","emoji":"🔢","level":3,"mascot":"🐼","choices":4,"reverseChance":0.3},
+    {"id":10,"name":"Singgasana Raja","emoji":"👑","level":3,"mascot":"🦉","choices":4,"reverseChance":0.3}
+  ],
+  "words": [
+    {"zone":1,"english":"number","indonesian":"bilangan / angka","sentence":"Find the missing [number] in the box.","translation":"Cari bilangan yang hilang di dalam kotak.","emoji":"🔢"},
+    {"zone":1,"english":"find","indonesian":"cari","sentence":"[Find] the value of 6 + 7.","translation":"Carilah nilai dari 6 + 7.","emoji":"🔍"},
+    {"zone":1,"english":"value","indonesian":"nilai","sentence":"What is the [value] of 5 + 5 − 3?","translation":"Berapa nilai dari 5 + 5 − 3?","emoji":"💎"},
+    {"zone":1,"english":"missing","indonesian":"hilang","sentence":"Write the [missing] number: 2, 4, __, 8.","translation":"Tulis bilangan yang hilang: 2, 4, __, 8.","emoji":"❓"},
+    {"zone":1,"english":"sum","indonesian":"jumlah","sentence":"The [sum] of 8 and 9 is what number?","translation":"Jumlah dari 8 dan 9 adalah bilangan berapa?","emoji":"➕"},
+    {"zone":1,"english":"total","indonesian":"total / jumlah seluruhnya","sentence":"What is the [total] of 12, 5 and 3?","translation":"Berapa total dari 12, 5, dan 3?","emoji":"🧮"},
+    {"zone":1,"english":"each","indonesian":"masing-masing","sentence":"[Each] child has 4 pencils.","translation":"Masing-masing anak punya 4 pensil.","emoji":"✏️"},
+    {"zone":1,"english":"next","indonesian":"berikutnya","sentence":"What is the [next] number: 3, 6, 9, __?","translation":"Bilangan berikutnya: 3, 6, 9, __?","emoji":"⏭️"},
+    {"zone":1,"english":"altogether","indonesian":"seluruhnya","sentence":"Ali has 7 cards and Budi has 5. How many cards are there [altogether]?","translation":"Ali punya 7 kartu dan Budi punya 5. Berapa kartu seluruhnya?","emoji":"🃏"},
+    {"zone":1,"english":"give","indonesian":"memberi","sentence":"Sara will [give] 3 stickers to her friend.","translation":"Sara akan memberi 3 stiker kepada temannya.","emoji":"🎁"},
+    {"zone":2,"english":"children","indonesian":"anak-anak","sentence":"There are 8 [children] in the park.","translation":"Ada 8 anak-anak di taman.","emoji":"🧒"},
+    {"zone":2,"english":"girls","indonesian":"anak perempuan","sentence":"5 [girls] and 4 boys are in the class.","translation":"5 anak perempuan dan 4 anak laki-laki ada di kelas.","emoji":"👧"},
+    {"zone":2,"english":"rabbits","indonesian":"kelinci","sentence":"3 [rabbits] eat 6 carrots.","translation":"3 kelinci memakan 6 wortel.","emoji":"🐰"},
+    {"zone":2,"english":"chickens","indonesian":"ayam","sentence":"A farmer has 9 [chickens].","translation":"Seorang petani punya 9 ayam.","emoji":"🐔"},
+    {"zone":2,"english":"apples","indonesian":"apel","sentence":"There are 12 [apples] in the basket.","translation":"Ada 12 apel di dalam keranjang.","emoji":"🍎"},
+    {"zone":2,"english":"sweets","indonesian":"permen","sentence":"Mia buys 10 [sweets].","translation":"Mia membeli 10 permen.","emoji":"🍬"},
+    {"zone":2,"english":"balls","indonesian":"bola","sentence":"The box has 6 red [balls].","translation":"Kotak itu berisi 6 bola merah.","emoji":"⚽"},
+    {"zone":2,"english":"balloons","indonesian":"balon","sentence":"Tom has 7 [balloons]. 2 of them burst.","translation":"Tom punya 7 balon. 2 di antaranya meletus.","emoji":"🎈"},
+    {"zone":2,"english":"coins","indonesian":"koin","sentence":"Dina has 5 [coins] in her purse.","translation":"Dina punya 5 koin di dompetnya.","emoji":"🪙"},
+    {"zone":2,"english":"cans","indonesian":"kaleng","sentence":"There are 4 [cans] on each shelf.","translation":"Ada 4 kaleng di setiap rak.","emoji":"🥫"},
+    {"zone":3,"english":"time","indonesian":"waktu","sentence":"What [time] is it on the clock?","translation":"Jam berapa pada jam itu?","emoji":"🕐"},
+    {"zone":3,"english":"minutes","indonesian":"menit","sentence":"The bus takes 15 [minutes] to arrive.","translation":"Bus butuh 15 menit untuk tiba.","emoji":"⏱️"},
+    {"zone":3,"english":"days","indonesian":"hari","sentence":"There are 7 [days] in a week.","translation":"Ada 7 hari dalam seminggu.","emoji":"📅"},
+    {"zone":3,"english":"week","indonesian":"minggu (7 hari)","sentence":"Ken reads 2 books every [week].","translation":"Ken membaca 2 buku setiap minggu.","emoji":"🗓️"},
+    {"zone":3,"english":"walk","indonesian":"berjalan","sentence":"Raka will [walk] 4 steps forward.","translation":"Raka akan berjalan 4 langkah ke depan.","emoji":"🚶"},
+    {"zone":3,"english":"legs","indonesian":"kaki (hewan)","sentence":"A cat has 4 [legs]. How many legs do 3 cats have?","translation":"Kucing punya 4 kaki. Berapa kaki dari 3 kucing?","emoji":"🐾"},
+    {"zone":3,"english":"bag","indonesian":"kantong / tas","sentence":"Each [bag] has 5 oranges.","translation":"Setiap kantong berisi 5 jeruk.","emoji":"👜"},
+    {"zone":3,"english":"pieces","indonesian":"potongan","sentence":"The cake is cut into 8 [pieces].","translation":"Kue itu dipotong menjadi 8 potong.","emoji":"🍰"},
+    {"zone":3,"english":"colour","indonesian":"warna","sentence":"What [colour] is the next shape?","translation":"Apa warna bangun berikutnya?","emoji":"🎨"},
+    {"zone":3,"english":"left","indonesian":"sisa","sentence":"Ben has 9 sweets and gives 4 away. How many are [left]?","translation":"Ben punya 9 permen dan memberi 4. Berapa permen yang tersisa?","emoji":"🍭"},
+    {"zone":4,"english":"figure","indonesian":"gambar / bangun","sentence":"Look at the [figure] below.","translation":"Lihat gambar di bawah ini.","emoji":"🖼️"},
+    {"zone":4,"english":"diagram","indonesian":"diagram","sentence":"Count the dots in the [diagram].","translation":"Hitung titik pada diagram.","emoji":"📊"},
+    {"zone":4,"english":"circle","indonesian":"lingkaran","sentence":"Draw a [circle] around the biggest number.","translation":"Lingkari bilangan terbesar.","emoji":"⭕"},
+    {"zone":4,"english":"squares","indonesian":"persegi / kotak","sentence":"How many [squares] are in the figure?","translation":"Ada berapa persegi pada gambar?","emoji":"🟦"},
+    {"zone":4,"english":"triangles","indonesian":"segitiga","sentence":"Count all the [triangles] in the diagram.","translation":"Hitung semua segitiga pada diagram.","emoji":"🔺"},
+    {"zone":4,"english":"cubes","indonesian":"kubus","sentence":"Tim builds a tower with 10 [cubes].","translation":"Tim membangun menara dari 10 kubus.","emoji":"🧊"},
+    {"zone":4,"english":"pattern","indonesian":"pola","sentence":"Look at the [pattern]: red, blue, red, blue.","translation":"Lihat pola: merah, biru, merah, biru.","emoji":"🔁"},
+    {"zone":4,"english":"sequence","indonesian":"urutan / deret","sentence":"Find the next number in the [sequence].","translation":"Cari bilangan berikutnya dalam deret.","emoji":"🔗"},
+    {"zone":4,"english":"shaded","indonesian":"diarsir","sentence":"How many squares are [shaded]?","translation":"Ada berapa persegi yang diarsir?","emoji":"🖍️"},
+    {"zone":4,"english":"row","indonesian":"baris","sentence":"There are 5 chairs in each [row].","translation":"Ada 5 kursi di setiap baris.","emoji":"💺"},
+    {"zone":5,"english":"mass","indonesian":"massa","sentence":"The [mass] of the bag is 3 kilograms.","translation":"Massa tas itu 3 kilogram.","emoji":"⚖️"},
+    {"zone":5,"english":"weight","indonesian":"berat","sentence":"Which fruit has the greater [weight]?","translation":"Buah mana yang lebih berat?","emoji":"🏋️"},
+    {"zone":5,"english":"grams","indonesian":"gram","sentence":"A pencil has a mass of 10 [grams].","translation":"Sebuah pensil bermassa 10 gram.","emoji":"🪶"},
+    {"zone":5,"english":"metres","indonesian":"meter","sentence":"The rope is 5 [metres] long.","translation":"Tali itu panjangnya 5 meter.","emoji":"📏"},
+    {"zone":5,"english":"shortest","indonesian":"terpendek","sentence":"Which string is the [shortest]?","translation":"Tali mana yang paling pendek?","emoji":"🐜"},
+    {"zone":5,"english":"paths","indonesian":"jalur","sentence":"How many [paths] go from A to B?","translation":"Ada berapa jalur dari A ke B?","emoji":"🛤️"},
+    {"zone":5,"english":"ways","indonesian":"cara","sentence":"In how many [ways] can you pick 2 balls?","translation":"Ada berapa cara memilih 2 bola?","emoji":"🔀"},
+    {"zone":5,"english":"least","indonesian":"paling sedikit","sentence":"Which box has the [least] sweets?","translation":"Kotak mana yang permennya paling sedikit?","emoji":"⬇️"},
+    {"zone":5,"english":"minimum","indonesian":"minimum / terkecil yang mungkin","sentence":"What is the [minimum] number of coins needed?","translation":"Berapa jumlah koin minimum yang dibutuhkan?","emoji":"🔽"},
+    {"zone":5,"english":"digits","indonesian":"angka penyusun bilangan","sentence":"The number 345 has three [digits].","translation":"Bilangan 345 punya tiga angka (digit).","emoji":"🔟"},
+    {"zone":6,"english":"ostrich","indonesian":"burung unta","sentence":"An [ostrich] has 2 legs.","translation":"Burung unta punya 2 kaki.","emoji":"🐦"},
+    {"zone":6,"english":"goat","indonesian":"kambing","sentence":"A [goat] has 4 legs.","translation":"Kambing punya 4 kaki.","emoji":"🐐"},
+    {"zone":6,"english":"bull","indonesian":"banteng / sapi jantan","sentence":"The [bull] eats 6 kg of grass.","translation":"Banteng makan 6 kg rumput.","emoji":"🐂"},
+    {"zone":6,"english":"hound","indonesian":"anjing pemburu","sentence":"The [hound] runs 8 metres.","translation":"Anjing pemburu berlari 8 meter.","emoji":"🐕"},
+    {"zone":6,"english":"penguin","indonesian":"penguin","sentence":"One [penguin] catches 3 fish.","translation":"Seekor penguin menangkap 3 ikan.","emoji":"🐧"},
+    {"zone":6,"english":"bear","indonesian":"beruang","sentence":"The [bear] has 5 jars of honey.","translation":"Beruang punya 5 toples madu.","emoji":"🐻"},
+    {"zone":6,"english":"queue","indonesian":"antrean","sentence":"Ana is 4th in the [queue].","translation":"Ana berada di urutan ke-4 dalam antrean.","emoji":"🧍"},
+    {"zone":6,"english":"corridor","indonesian":"koridor / lorong","sentence":"The [corridor] is 10 metres long.","translation":"Koridor itu panjangnya 10 meter.","emoji":"🚪"},
+    {"zone":6,"english":"stairs","indonesian":"tangga","sentence":"There are 12 steps on the [stairs].","translation":"Ada 12 anak tangga pada tangga itu.","emoji":"🪜"},
+    {"zone":7,"english":"knot","indonesian":"simpul","sentence":"Ravi ties a [knot] in the rope.","translation":"Ravi membuat simpul pada tali.","emoji":"🪢"},
+    {"zone":7,"english":"rope","indonesian":"tali tebal","sentence":"The [rope] is cut into 3 equal parts.","translation":"Tali itu dipotong menjadi 3 bagian sama panjang.","emoji":"➰"},
+    {"zone":7,"english":"strings","indonesian":"benang / senar","sentence":"There are 6 [strings] on the guitar.","translation":"Ada 6 senar pada gitar.","emoji":"🎸"},
+    {"zone":7,"english":"wire","indonesian":"kawat","sentence":"A [wire] 20 cm long is bent into a square.","translation":"Kawat sepanjang 20 cm dibengkokkan menjadi persegi.","emoji":"🔌"},
+    {"zone":7,"english":"matchsticks","indonesian":"batang korek api","sentence":"Use 8 [matchsticks] to make 2 squares.","translation":"Pakai 8 batang korek api untuk membuat 2 persegi.","emoji":"🔥"},
+    {"zone":7,"english":"blindfolded","indonesian":"ditutup matanya","sentence":"Eli is [blindfolded] and picks a ball.","translation":"Mata Eli ditutup dan ia mengambil sebuah bola.","emoji":"🙈"},
+    {"zone":7,"english":"stacked","indonesian":"ditumpuk","sentence":"5 boxes are [stacked] on the table.","translation":"5 kotak ditumpuk di atas meja.","emoji":"📦"},
+    {"zone":7,"english":"tiles","indonesian":"ubin","sentence":"The floor has 20 [tiles].","translation":"Lantai itu punya 20 ubin.","emoji":"🔲"},
+    {"zone":7,"english":"bicycle","indonesian":"sepeda","sentence":"Each [bicycle] has 2 wheels.","translation":"Setiap sepeda punya 2 roda.","emoji":"🚲"},
+    {"zone":8,"english":"pyramid","indonesian":"piramida","sentence":"A [pyramid] has 5 faces.","translation":"Piramida (alas segi empat) punya 5 sisi.","emoji":"🏜️"},
+    {"zone":8,"english":"pentagon","indonesian":"segi lima","sentence":"A [pentagon] has 5 sides.","translation":"Segi lima punya 5 sisi.","emoji":"⬟"},
+    {"zone":8,"english":"hexagon","indonesian":"segi enam","sentence":"A [hexagon] has 6 sides.","translation":"Segi enam punya 6 sisi.","emoji":"⬡"},
+    {"zone":8,"english":"rectangle","indonesian":"persegi panjang","sentence":"The [rectangle] is 5 cm long and 2 cm wide.","translation":"Persegi panjang itu panjangnya 5 cm dan lebarnya 2 cm.","emoji":"🟫"},
+    {"zone":8,"english":"diagonal","indonesian":"diagonal","sentence":"Draw a [diagonal] in the square.","translation":"Gambar diagonal di dalam persegi.","emoji":"↗️"},
+    {"zone":8,"english":"perimeter","indonesian":"keliling","sentence":"Find the [perimeter] of the square.","translation":"Cari keliling persegi itu.","emoji":"📐"},
+    {"zone":8,"english":"grid","indonesian":"kisi-kisi","sentence":"Colour 3 boxes on the [grid].","translation":"Warnai 3 kotak pada kisi-kisi.","emoji":"🔳"},
+    {"zone":8,"english":"dartboard","indonesian":"papan panah","sentence":"Ken hits 10 on the [dartboard].","translation":"Ken mengenai angka 10 pada papan panah.","emoji":"🎯"},
+    {"zone":8,"english":"reflection","indonesian":"pantulan / bayangan cermin","sentence":"Draw the [reflection] of the shape.","translation":"Gambar pantulan (bayangan cermin) bangun itu.","emoji":"🪞"},
+    {"zone":9,"english":"remainder","indonesian":"sisa hasil bagi","sentence":"What is the [remainder] when 17 is divided by 5?","translation":"Berapa sisanya jika 17 dibagi 5?","emoji":"➗"},
+    {"zone":9,"english":"divided","indonesian":"dibagi","sentence":"20 is [divided] by 4.","translation":"20 dibagi 4.","emoji":"✂️"},
+    {"zone":9,"english":"multiplication","indonesian":"perkalian","sentence":"Do the [multiplication]: 3 × 6.","translation":"Kerjakan perkalian: 3 × 6.","emoji":"✖️"},
+    {"zone":9,"english":"product","indonesian":"hasil kali","sentence":"The [product] of 4 and 5 is 20.","translation":"Hasil kali 4 dan 5 adalah 20.","emoji":"🔶"},
+    {"zone":9,"english":"factor","indonesian":"faktor","sentence":"Is 3 a [factor] of 12?","translation":"Apakah 3 faktor dari 12?","emoji":"🔑"},
+    {"zone":9,"english":"prime","indonesian":"bilangan prima","sentence":"7 is a [prime] number.","translation":"7 adalah bilangan prima.","emoji":"🥇"},
+    {"zone":9,"english":"odd","indonesian":"ganjil","sentence":"Circle the [odd] numbers: 2, 3, 4, 5.","translation":"Lingkari bilangan ganjil: 2, 3, 4, 5.","emoji":"1️⃣"},
+    {"zone":9,"english":"even","indonesian":"genap","sentence":"Which number is [even]: 7, 8 or 9?","translation":"Bilangan mana yang genap: 7, 8, atau 9?","emoji":"2️⃣"},
+    {"zone":9,"english":"consecutive","indonesian":"berurutan","sentence":"5, 6 and 7 are [consecutive] numbers.","translation":"5, 6, dan 7 adalah bilangan berurutan.","emoji":"⛓️"},
+    {"zone":10,"english":"palindromic","indonesian":"palindrom (sama dibaca dua arah)","sentence":"121 is a [palindromic] number.","translation":"121 adalah bilangan palindrom.","emoji":"🔄"},
+    {"zone":10,"english":"guarantee","indonesian":"menjamin","sentence":"How many socks do you need to [guarantee] a pair?","translation":"Berapa kaos kaki yang dibutuhkan untuk menjamin ada sepasang?","emoji":"✅"},
+    {"zone":10,"english":"ensure","indonesian":"memastikan","sentence":"Pick 3 balls to [ensure] two have the same colour.","translation":"Ambil 3 bola untuk memastikan dua bola berwarna sama.","emoji":"🛡️"},
+    {"zone":10,"english":"pigeonhole","indonesian":"sarang merpati","sentence":"3 pigeons in 2 holes: by the [pigeonhole] principle, one hole has 2.","translation":"3 merpati di 2 lubang: menurut prinsip sarang merpati, satu lubang berisi 2.","emoji":"🕊️"},
+    {"zone":10,"english":"weigh","indonesian":"menimbang","sentence":"We [weigh] the apples on a scale.","translation":"Kami menimbang apel pada timbangan.","emoji":"🧺"},
+    {"zone":10,"english":"scale","indonesian":"timbangan","sentence":"The [scale] shows 500 grams.","translation":"Timbangan menunjukkan 500 gram.","emoji":"🛒"},
+    {"zone":10,"english":"pot","indonesian":"pot bunga","sentence":"There are 3 flowers in each [pot].","translation":"Ada 3 bunga di setiap pot.","emoji":"🪴"},
+    {"zone":10,"english":"flight","indonesian":"rangkaian tangga","sentence":"There are 12 steps in one [flight] of stairs.","translation":"Ada 12 anak tangga dalam satu rangkaian tangga.","emoji":"🏢"}
+  ]
+}
+</script>
+
 <script>
-/* ===== DATA: kata|arti|kalimat ([kata] = digarisbawahi)|terjemahan|emoji ===== */
-const Z=[
-{n:'Gerbang Safari',e:'🚪',l:1,m:'🐘',w:`number|bilangan / angka|Find the missing [number] in the box.|Cari bilangan yang hilang di dalam kotak.|🔢
-find|cari|[Find] the value of 6 + 7.|Carilah nilai dari 6 + 7.|🔍
-value|nilai|What is the [value] of 5 + 5 − 3?|Berapa nilai dari 5 + 5 − 3?|💎
-missing|hilang|Write the [missing] number: 2, 4, __, 8.|Tulis bilangan yang hilang: 2, 4, __, 8.|❓
-sum|jumlah|The [sum] of 8 and 9 is what number?|Jumlah dari 8 dan 9 adalah bilangan berapa?|➕
-total|total / jumlah seluruhnya|What is the [total] of 12, 5 and 3?|Berapa total dari 12, 5, dan 3?|🧮
-each|masing-masing|[Each] child has 4 pencils.|Masing-masing anak punya 4 pensil.|✏️
-next|berikutnya|What is the [next] number: 3, 6, 9, __?|Bilangan berikutnya: 3, 6, 9, __?|⏭️
-altogether|seluruhnya|Ali has 7 cards and Budi has 5. How many cards are there [altogether]?|Ali punya 7 kartu dan Budi punya 5. Berapa kartu seluruhnya?|🃏
-give|memberi|Sara will [give] 3 stickers to her friend.|Sara akan memberi 3 stiker kepada temannya.|🎁`},
-{n:'Kandang Kelinci',e:'🐰',l:1,m:'🐰',w:`children|anak-anak|There are 8 [children] in the park.|Ada 8 anak-anak di taman.|🧒
-girls|anak perempuan|5 [girls] and 4 boys are in the class.|5 anak perempuan dan 4 anak laki-laki ada di kelas.|👧
-rabbits|kelinci|3 [rabbits] eat 6 carrots.|3 kelinci memakan 6 wortel.|🐰
-chickens|ayam|A farmer has 9 [chickens].|Seorang petani punya 9 ayam.|🐔
-apples|apel|There are 12 [apples] in the basket.|Ada 12 apel di dalam keranjang.|🍎
-sweets|permen|Mia buys 10 [sweets].|Mia membeli 10 permen.|🍬
-balls|bola|The box has 6 red [balls].|Kotak itu berisi 6 bola merah.|⚽
-balloons|balon|Tom has 7 [balloons]. 2 of them burst.|Tom punya 7 balon. 2 di antaranya meletus.|🎈
-coins|koin|Dina has 5 [coins] in her purse.|Dina punya 5 koin di dompetnya.|🪙
-cans|kaleng|There are 4 [cans] on each shelf.|Ada 4 kaleng di setiap rak.|🥫`},
-{n:'Taman Waktu',e:'⏰',l:1,m:'🦒',w:`time|waktu|What [time] is it on the clock?|Jam berapa pada jam itu?|🕐
-minutes|menit|The bus takes 15 [minutes] to arrive.|Bus butuh 15 menit untuk tiba.|⏱️
-days|hari|There are 7 [days] in a week.|Ada 7 hari dalam seminggu.|📅
-week|minggu (7 hari)|Ken reads 2 books every [week].|Ken membaca 2 buku setiap minggu.|🗓️
-walk|berjalan|Raka will [walk] 4 steps forward.|Raka akan berjalan 4 langkah ke depan.|🚶
-legs|kaki (hewan)|A cat has 4 [legs]. How many legs do 3 cats have?|Kucing punya 4 kaki. Berapa kaki dari 3 kucing?|🐾
-bag|kantong / tas|Each [bag] has 5 oranges.|Setiap kantong berisi 5 jeruk.|👜
-pieces|potongan|The cake is cut into 8 [pieces].|Kue itu dipotong menjadi 8 potong.|🍰
-colour|warna|What [colour] is the next shape?|Apa warna bangun berikutnya?|🎨
-left|sisa|Ben has 9 sweets and gives 4 away. How many are [left]?|Ben punya 9 permen dan memberi 4. Berapa permen yang tersisa?|🍭`},
-{n:'Rumah Bentuk',e:'🔺',l:2,m:'🐒',w:`figure|gambar / bangun|Look at the [figure] below.|Lihat gambar di bawah ini.|🖼️
-diagram|diagram|Count the dots in the [diagram].|Hitung titik pada diagram.|📊
-circle|lingkaran|Draw a [circle] around the biggest number.|Lingkari bilangan terbesar.|⭕
-squares|persegi / kotak|How many [squares] are in the figure?|Ada berapa persegi pada gambar?|🟦
-triangles|segitiga|Count all the [triangles] in the diagram.|Hitung semua segitiga pada diagram.|🔺
-cubes|kubus|Tim builds a tower with 10 [cubes].|Tim membangun menara dari 10 kubus.|🧊
-pattern|pola|Look at the [pattern]: red, blue, red, blue.|Lihat pola: merah, biru, merah, biru.|🔁
-sequence|urutan / deret|Find the next number in the [sequence].|Cari bilangan berikutnya dalam deret.|🔗
-shaded|diarsir|How many squares are [shaded]?|Ada berapa persegi yang diarsir?|🖍️
-row|baris|There are 5 chairs in each [row].|Ada 5 kursi di setiap baris.|💺`},
-{n:'Pos Penimbangan',e:'📏',l:2,m:'🦁',w:`mass|massa|The [mass] of the bag is 3 kilograms.|Massa tas itu 3 kilogram.|⚖️
-weight|berat|Which fruit has the greater [weight]?|Buah mana yang lebih berat?|🏋️
-grams|gram|A pencil has a mass of 10 [grams].|Sebuah pensil bermassa 10 gram.|🪶
-metres|meter|The rope is 5 [metres] long.|Tali itu panjangnya 5 meter.|📏
-shortest|terpendek|Which string is the [shortest]?|Tali mana yang paling pendek?|🐜
-paths|jalur|How many [paths] go from A to B?|Ada berapa jalur dari A ke B?|🛤️
-ways|cara|In how many [ways] can you pick 2 balls?|Ada berapa cara memilih 2 bola?|🔀
-least|paling sedikit|Which box has the [least] sweets?|Kotak mana yang permennya paling sedikit?|⬇️
-minimum|minimum / terkecil yang mungkin|What is the [minimum] number of coins needed?|Berapa jumlah koin minimum yang dibutuhkan?|🔽
-digits|angka penyusun bilangan|The number 345 has three [digits].|Bilangan 345 punya tiga angka (digit).|🔟`},
-{n:'Kandang Hewan Besar',e:'🐧',l:2,m:'🐧',w:`ostrich|burung unta|An [ostrich] has 2 legs.|Burung unta punya 2 kaki.|🐦
-goat|kambing|A [goat] has 4 legs.|Kambing punya 4 kaki.|🐐
-bull|banteng / sapi jantan|The [bull] eats 6 kg of grass.|Banteng makan 6 kg rumput.|🐂
-hound|anjing pemburu|The [hound] runs 8 metres.|Anjing pemburu berlari 8 meter.|🐕
-penguin|penguin|One [penguin] catches 3 fish.|Seekor penguin menangkap 3 ikan.|🐧
-bear|beruang|The [bear] has 5 jars of honey.|Beruang punya 5 toples madu.|🐻
-queue|antrean|Ana is 4th in the [queue].|Ana berada di urutan ke-4 dalam antrean.|🧍
-corridor|koridor / lorong|The [corridor] is 10 metres long.|Koridor itu panjangnya 10 meter.|🚪
-stairs|tangga|There are 12 steps on the [stairs].|Ada 12 anak tangga pada tangga itu.|🪜`},
-{n:'Gudang Perlengkapan',e:'🧵',l:3,m:'🐯',w:`knot|simpul|Ravi ties a [knot] in the rope.|Ravi membuat simpul pada tali.|🪢
-rope|tali tebal|The [rope] is cut into 3 equal parts.|Tali itu dipotong menjadi 3 bagian sama panjang.|➰
-strings|benang / senar|There are 6 [strings] on the guitar.|Ada 6 senar pada gitar.|🎸
-wire|kawat|A [wire] 20 cm long is bent into a square.|Kawat sepanjang 20 cm dibengkokkan menjadi persegi.|🔌
-matchsticks|batang korek api|Use 8 [matchsticks] to make 2 squares.|Pakai 8 batang korek api untuk membuat 2 persegi.|🔥
-blindfolded|ditutup matanya|Eli is [blindfolded] and picks a ball.|Mata Eli ditutup dan ia mengambil sebuah bola.|🙈
-stacked|ditumpuk|5 boxes are [stacked] on the table.|5 kotak ditumpuk di atas meja.|📦
-tiles|ubin|The floor has 20 [tiles].|Lantai itu punya 20 ubin.|🔲
-bicycle|sepeda|Each [bicycle] has 2 wheels.|Setiap sepeda punya 2 roda.|🚲`},
-{n:'Laboratorium Bentuk',e:'🔷',l:3,m:'🦓',w:`pyramid|piramida|A [pyramid] has 5 faces.|Piramida (alas segi empat) punya 5 sisi.|🏜️
-pentagon|segi lima|A [pentagon] has 5 sides.|Segi lima punya 5 sisi.|⬟
-hexagon|segi enam|A [hexagon] has 6 sides.|Segi enam punya 6 sisi.|⬡
-rectangle|persegi panjang|The [rectangle] is 5 cm long and 2 cm wide.|Persegi panjang itu panjangnya 5 cm dan lebarnya 2 cm.|🟫
-diagonal|diagonal|Draw a [diagonal] in the square.|Gambar diagonal di dalam persegi.|↗️
-perimeter|keliling|Find the [perimeter] of the square.|Cari keliling persegi itu.|📐
-grid|kisi-kisi|Colour 3 boxes on the [grid].|Warnai 3 kotak pada kisi-kisi.|🔳
-dartboard|papan panah|Ken hits 10 on the [dartboard].|Ken mengenai angka 10 pada papan panah.|🎯
-reflection|pantulan / bayangan cermin|Draw the [reflection] of the shape.|Gambar pantulan (bayangan cermin) bangun itu.|🪞`},
-{n:'Pondok Hitung',e:'🔢',l:3,m:'🐼',w:`remainder|sisa hasil bagi|What is the [remainder] when 17 is divided by 5?|Berapa sisanya jika 17 dibagi 5?|➗
-divided|dibagi|20 is [divided] by 4.|20 dibagi 4.|✂️
-multiplication|perkalian|Do the [multiplication]: 3 × 6.|Kerjakan perkalian: 3 × 6.|✖️
-product|hasil kali|The [product] of 4 and 5 is 20.|Hasil kali 4 dan 5 adalah 20.|🔶
-factor|faktor|Is 3 a [factor] of 12?|Apakah 3 faktor dari 12?|🔑
-prime|bilangan prima|7 is a [prime] number.|7 adalah bilangan prima.|🥇
-odd|ganjil|Circle the [odd] numbers: 2, 3, 4, 5.|Lingkari bilangan ganjil: 2, 3, 4, 5.|1️⃣
-even|genap|Which number is [even]: 7, 8 or 9?|Bilangan mana yang genap: 7, 8, atau 9?|2️⃣
-consecutive|berurutan|5, 6 and 7 are [consecutive] numbers.|5, 6, dan 7 adalah bilangan berurutan.|⛓️`},
-{n:'Singgasana Raja',e:'👑',l:3,m:'🦉',w:`palindromic|palindrom (sama dibaca dua arah)|121 is a [palindromic] number.|121 adalah bilangan palindrom.|🔄
-guarantee|menjamin|How many socks do you need to [guarantee] a pair?|Berapa kaos kaki yang dibutuhkan untuk menjamin ada sepasang?|✅
-ensure|memastikan|Pick 3 balls to [ensure] two have the same colour.|Ambil 3 bola untuk memastikan dua bola berwarna sama.|🛡️
-pigeonhole|sarang merpati|3 pigeons in 2 holes: by the [pigeonhole] principle, one hole has 2.|3 merpati di 2 lubang: menurut prinsip sarang merpati, satu lubang berisi 2.|🕊️
-weigh|menimbang|We [weigh] the apples on a scale.|Kami menimbang apel pada timbangan.|🧺
-scale|timbangan|The [scale] shows 500 grams.|Timbangan menunjukkan 500 gram.|🛒
-pot|pot bunga|There are 3 flowers in each [pot].|Ada 3 bunga di setiap pot.|🪴
-flight|rangkaian tangga|There are 12 steps in one [flight] of stairs.|Ada 12 anak tangga dalam satu rangkaian tangga.|🏢`}
-];
-const WORDS=[];Z.forEach((z,i)=>z.w.split('\n').forEach(l=>{const p=l.split('|');WORDS.push({w:p[0],a:p[1],s:p[2],t:p[3],e:p[4],z:i+1})}));
-const AVS=['🐘','🦒','🐒','🦁','🐧','🐯','🦓','🐼','🦉','🐸'];
-const LVT=['','Mudah','Sedang','Sulit'];
-const QT=15,STOP=['yang','sama','dari','dibaca'];
+'use strict';
+/* ==========================================================================
+   SAFARI KATA — logika game
+   Daftar isi:
+     1. PENGATURAN   : semua angka/aturan game (ubah di sini)
+     2. DATA         : memuat & memeriksa JSON dari <script id="game-data">
+     3. PENYIMPANAN  : profil & skor di localStorage
+     4. UTILITAS     : fungsi bantu kecil
+     5. LAYAR        : profil, peta, leaderboard
+     6. RONDE        : soal, timer, skor, hasil
+     7. EVENT        : daftar aksi tombol (ACTIONS) & penghubung klik
+     8. MULAI
+   ========================================================================== */
 
-/* ===== STORAGE ===== */
-const KEY='safariKataV1';let D={profiles:[],cur:null,best:{}};
-try{Object.assign(D,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}};
 
-/* ===== HELPERS ===== */
-const $=id=>document.getElementById(id),app=$('app');
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const hl=s=>esc(s).replace(/\[(.+?)\]/g,'<u>$1</u>'),plain=s=>s.replace(/[\[\]]/g,'');
-const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const tok=s=>s.toLowerCase().split(/[^a-z]+/).filter(t=>t.length>3&&!STOP.includes(t));
-const me=()=>D.profiles.find(p=>p.id===D.cur);
-const stars=n=>'★'.repeat(n)+'☆'.repeat(3-n);
-const tts='speechSynthesis' in window;
-function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
-let G=null;
+/* ============================== 1. PENGATURAN ============================== */
+const CONFIG = {
+  storageKey: 'safariKataV2',
 
-/* ===== PROFIL ===== */
-let selAv=AVS[0],holdT=null;
-function profileScreen(){
-  G=null;
-  app.innerHTML=`<h1>🦁 Safari Kata</h1><div class="lbl">Siapa yang main hari ini?</div>
-  ${D.profiles.map(p=>`<button class="btn g" onclick="pick('${p.id}')">${p.av} ${esc(p.name)}</button>`).join('')}
-  <div class="card"><b>Pemain baru</b>
-  <input id="nm" maxlength="12" placeholder="Nama panggilan" autocomplete="off">
-  <div class="av">${AVS.map(a=>`<button class="${a===selAv?'on':''}" onclick="selAv='${a}';profileScreen2()">${a}</button>`).join('')}</div>
-  <button class="btn" onclick="addP()">Mulai! ▶</button></div>
-  <button class="btn s" onpointerdown="holdT=setTimeout(wipe,3000)" onpointerup="clearTimeout(holdT)" onpointerleave="clearTimeout(holdT)">Hapus semua data (tahan 3 detik)</button>`;
-}
-function profileScreen2(){const v=($('nm')||{}).value||'';profileScreen();$('nm').value=v}
-function addP(){const n=$('nm').value.trim();if(!n){$('nm').focus();return}
-  const p={id:Date.now().toString(36),name:n,av:selAv};D.profiles.push(p);D.cur=p.id;save();mapScreen()}
-function pick(id){D.cur=id;save();mapScreen()}
-function wipe(){D={profiles:[],cur:null,best:{}};save();profileScreen()}
+  // Timer
+  secondsPerQuestion: 15,
+  secondsPerWordInRound: 10,      // timer ronde = jumlah soal × angka ini
 
-/* ===== PETA ===== */
-function mapScreen(){
-  const p=me();if(!p)return profileScreen();const b=D.best[p.id]||{};
-  const zc=(i,z)=>`<button class="zone" onclick="startRound(${i})"><span class="e">${z.e}</span><b>${i}. ${z.n}</b><small class="lv${z.l}">${LVT[z.l]} · ${z.w.split('\n').length} kata</small><span class="stars">${stars(b[i]?b[i].st:0)}</span></button>`;
-  app.innerHTML=`<div class="row"><span class="pill">${p.av} ${esc(p.name)}</span><button class="pill" style="border:0;font:inherit" onclick="profileScreen()">Ganti</button></div>
-  <h2>🗺️ Peta Safari</h2><div class="lbl">Pilih zona yang kamu mau!</div>
-  <div class="grid" style="margin-top:10px">${Z.map((z,i)=>zc(i+1,z)).join('')}</div>
-  <button class="btn" onclick="startRound(0)" style="margin-top:14px">🎲 Safari Acak (10 kata campur)</button>
-  <button class="btn g" onclick="lbScreen('all')">🏆 Leaderboard</button>`;
-}
+  // Nyawa
+  startingLives: 3,
+  streakForExtraLife: 5,          // tiap kelipatan ini, +1 nyawa (maks. startingLives)
 
-/* ===== RONDE ===== */
-function buildQs(z){
-  const pool=z?WORDS.filter(x=>x.z==z):shuffle(WORDS.slice()).slice(0,10);
-  const nopt=(z>=6||z==0)?4:3,revP=(z>=8||z==0)?.3:0;
-  return shuffle(pool.slice()).map(w=>{
-    const rev=Math.random()<revP,bad=x=>x===w||tok(x.a).some(t=>tok(w.a).includes(t));
-    const c=shuffle(WORDS.filter(x=>x.z==w.z&&!bad(x))).concat(shuffle(WORDS.filter(x=>x.z!=w.z&&!bad(x))));
-    return{w,rev,opts:shuffle([w].concat(c.slice(0,nopt-1)))};
+  // Skor
+  baseScore: 100,
+  maxSpeedBonus: 50,              // bonus kecepatan: 0..ini, sebanding sisa waktu soal
+  streakBonus: { 3: 20, 4: 30, 5: 50 },   // 5 ke atas memakai nilai terakhir
+  lifeBonusPerLife: 50,           // bonus akhir ronde per nyawa tersisa
+  starThresholds: [0.6, 0.8, 1.0],        // proporsi benar untuk ★, ★★, ★★★
+
+  leaderboardSize: 10,
+  resetHoldMs: 3000,              // lama menahan tombol "Hapus semua data"
+  levelLabels: { 1: 'Mudah', 2: 'Sedang', 3: 'Sulit' },
+  avatars: ['🐘', '🦒', '🐒', '🦁', '🐧', '🐯', '🦓', '🐼', '🦉', '🐸'],
+
+  // Mode "Safari Acak" (zona khusus dengan id 0)
+  random: { name: 'Safari Acak', emoji: '🎲', mascot: '🦜', wordCount: 10, choices: 4, reverseChance: 0.3 },
+};
+const RANDOM_ZONE_ID = 0;
+const TICK_SECONDS = 0.1;
+
+
+/* ================================ 2. DATA ================================== */
+let ZONES = [];
+let WORDS = [];
+
+/** Membaca JSON & memeriksa kesalahan umum, agar salah ketik mudah ditemukan. */
+function loadGameData() {
+  const data = JSON.parse(document.getElementById('game-data').textContent);
+  ZONES = data.zones;
+  WORDS = data.words;
+
+  const problems = [];
+  const requiredWordFields = ['english', 'indonesian', 'sentence', 'translation', 'emoji', 'zone'];
+  WORDS.forEach((w, i) => {
+    requiredWordFields.forEach(f => {
+      if (w[f] === undefined || w[f] === '') problems.push(`Kata #${i + 1} (${w.english || '?'}): field "${f}" kosong`);
+    });
+    if (!ZONES.some(z => z.id === w.zone)) problems.push(`Kata "${w.english}": zone ${w.zone} tidak ditemukan`);
+    if (w.sentence && !/\[.+\]/.test(w.sentence)) problems.push(`Kata "${w.english}": kalimat harus punya tanda [kata]`);
   });
+  if (problems.length) throw new Error(problems.join('\n'));
 }
-function startRound(z){
-  const qs=buildQs(z);
-  G={z,qs,i:0,lives:3,score:0,streak:0,correct:0,miss:[],rLeft:qs.length*10,run:false,m:z?Z[z-1].m:'🦜'};
-  let n=3;const tick=()=>{if(!G||G.z!==z)return;if(n==0){showQ();return}
-    app.innerHTML=`<div class="cd">${n}</div><div class="mascot">${G.m}</div><h2 style="color:#fff">Siap-siap!</h2>`;n--;setTimeout(tick,800)};tick();
+
+function getZone(id) {
+  if (id === RANDOM_ZONE_ID) return { id, ...CONFIG.random };
+  const zone = ZONES.find(z => z.id === id);
+  return { mascot: '🦁', choices: 3, reverseChance: 0, ...zone };   // nilai bawaan jika tidak diisi di JSON
 }
-const hearts=()=>'❤️'.repeat(G.lives)+'🖤'.repeat(3-G.lives);
-function hud(){return`<div class="row"><span class="pill" id="hr">${hearts()}</span><span class="pill">${G.i+1}/${G.qs.length}</span><span class="pill" id="sc">⭐ ${G.score}</span></div>
-<div class="row" style="margin-top:8px"><small>Ronde</small><div class="bar"><i id="rb"></i></div><b id="rt"></b></div>`}
-function showQ(){
-  const q=G.qs[G.i],w=q.w;G.q=q;G.qLeft=QT;G.ans=false;G.run=true;
-  const body=q.rev?`<div class="lbl">Apa bahasa Inggrisnya?</div><div class="sent big">${esc(w.a)}</div>`
-    :`<div class="lbl">Apa arti kata yang bergaris bawah?</div><div class="sent">${hl(w.s)}</div>${tts?'<button class="spk" onclick="speak(G.q.w.s.replace(/[\\[\\]]/g,\'\'))">🔊</button>':''}`;
-  app.innerHTML=hud()+`<div class="mascot" id="ms">${G.m}</div><div class="card">${body}</div>
-  <div class="row"><small>Soal</small><div class="bar"><i id="qb"></i></div><b id="qt"></b></div>
-  <div id="fb">${q.opts.map((o,i)=>`<button class="opt" onclick="answer(${i})">${esc(q.rev?o.w:o.a)}</button>`).join('')}</div>`;
-  bars();
+const wordsInZone = id => WORDS.filter(w => w.zone === id);
+
+
+/* ============================= 3. PENYIMPANAN ============================== */
+/* db.best[profileId][zoneId] = { score, stars } */
+const db = loadDb();
+
+function loadDb() {
+  const empty = { profiles: [], current: null, best: {} };
+  try { return Object.assign(empty, JSON.parse(localStorage.getItem(CONFIG.storageKey) || '{}')); }
+  catch (e) { return empty; }
 }
-function bars(){
-  if(!$('rb'))return;const rp=G.rLeft/(G.qs.length*10),qp=G.qLeft/QT;
-  const col=p=>p>.5?'#3aa655':p>.25?'#f5b301':'#e0493a';
-  $('rb').style.width=Math.max(0,rp*100)+'%';$('rb').style.background=col(rp);$('rt').textContent=Math.ceil(Math.max(0,G.rLeft))+'s';
-  $('qb').style.width=Math.max(0,qp*100)+'%';$('qb').style.background=col(qp);$('qt').textContent=Math.ceil(Math.max(0,G.qLeft))+'s';
+function saveDb() {
+  try { localStorage.setItem(CONFIG.storageKey, JSON.stringify(db)); } catch (e) { /* abaikan */ }
 }
-setInterval(()=>{
-  if(!G||!G.run)return;G.qLeft-=.1;G.rLeft-=.1;bars();
-  if(G.rLeft<=0){G.run=false;endRound('time')}else if(G.qLeft<=0)answer(-1);
-},100);
-function answer(i){
-  if(!G||G.ans)return;G.ans=true;G.run=false;
-  const q=G.q,w=q.w,ok=i>=0&&q.opts[i]===w;let msg,pts=0,extra='';
-  if(ok){
-    pts=100+Math.round(50*Math.max(0,G.qLeft)/QT);G.streak++;G.correct++;
-    const sb=G.streak>=5?50:G.streak==4?30:G.streak==3?20:0;pts+=sb;if(sb)extra=` 🔥 Beruntun +${sb}`;
-    if(G.streak%5==0&&G.lives<3){G.lives++;extra+=' ❤️ +1 nyawa!'}
-    G.score+=pts;msg=['Hebat! 🎉','Pintar! 👏','Benar! 🌟'][Math.floor(Math.random()*3)]+` +${pts}`+extra;
-  }else{
-    G.streak=0;G.lives--;G.miss.push(w);msg=i<0?'Waktu habis! ⏰':'Hampir! Yuk lihat artinya 💪';
+function resetDb() {
+  db.profiles = []; db.current = null; db.best = {};
+  saveDb();
+}
+const currentProfile = () => db.profiles.find(p => p.id === db.current);
+
+
+/* =============================== 4. UTILITAS =============================== */
+const app = document.getElementById('app');
+const $ = id => document.getElementById(id);
+const show = html => { app.innerHTML = html; };
+
+const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+const escapeHtml = s => String(s).replace(/[&<>"]/g, c => ESCAPES[c]);
+
+/** "Find the [missing] number" -> kata di dalam [ ] digarisbawahi. */
+const underline = sentence => escapeHtml(sentence).replace(/\[(.+?)\]/g, '<u>$1</u>');
+const stripBrackets = sentence => sentence.replace(/[\[\]]/g, '');
+
+const renderStars = (n, max = 3) => '★'.repeat(n) + '☆'.repeat(max - n);
+
+function shuffle(list) {
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
   }
-  document.querySelectorAll('.opt').forEach((b,k)=>{b.disabled=true;if(q.opts[k]===w)b.classList.add('ok');else if(k===i)b.classList.add('no')});
-  const m=$('ms');if(m)m.classList.add(ok?'hop':'shake');
-  $('hr').textContent=hearts();$('sc').textContent='⭐ '+G.score;
-  const last=G.lives<=0||G.i+1>=G.qs.length;
-  $('fb').innerHTML=`<div class="card fb"><div style="font-weight:bold;font-size:20px;color:${ok?'#2e9b4a':'#d1392b'}">${msg}</div>
-  <div class="w">${w.e} ${esc(w.w)} = ${esc(w.a)}</div><div class="sent" style="font-size:19px">${hl(w.s)}</div><div class="tr">${esc(w.t)}</div>
-  ${tts?'<button class="spk" onclick="speak(G.q.w.w+\'. \'+G.q.w.s.replace(/[\\[\\]]/g,\'\'))">🔊</button>':''}</div>
-  <button class="btn g" onclick="nextQ()">${last?'Selesai 🏁':'Lanjut ▶'}</button>`;
-}
-function nextQ(){
-  if(G.lives<=0)return endRound('lives');
-  if(G.i+1>=G.qs.length)return endRound('done');
-  G.i++;showQ();
-}
-function endRound(why){
-  G.run=false;const n=G.qs.length;
-  const bonus=(G.lives>0?G.lives*50:0)+Math.max(0,Math.floor(G.rLeft));
-  G.score+=bonus;const pct=G.correct/n,st=pct>=1?3:pct>=.8?2:pct>=.6?1:0;
-  const p=me(),b=D.best[p.id]=D.best[p.id]||{};let nb=false;
-  if(!b[G.z]||G.score>b[G.z].s){b[G.z]={s:G.score,st:Math.max(st,b[G.z]?b[G.z].st:0)};nb=true}
-  else if(st>b[G.z].st)b[G.z].st=st;
-  save();
-  const title={done:'Ronde selesai! 🎉',lives:'Yah, nyawa habis. Yuk coba lagi! 💪',time:'Waktu ronde habis! ⏰'}[why];
-  const z=G.z;
-  app.innerHTML=`<div class="mascot">${st>=2?'🥳':'🤗'}</div><h2>${title}</h2>
-  <div class="card" style="text-align:center"><div class="stars" style="font-size:42px">${stars(st)}</div>
-  <div style="font-size:34px;font-weight:bold">⭐ ${G.score}</div>
-  ${nb?'<div style="color:#2e9b4a;font-weight:bold">🏅 Skor terbaikmu!</div>':''}
-  <div class="lbl">Benar ${G.correct} dari ${n} · Bonus akhir +${bonus}</div></div>
-  ${G.miss.length?`<div class="card miss"><b>📝 Kata yang perlu diulang:</b>${G.miss.map(w=>`<div>${w.e} <b>${esc(w.w)}</b> = ${esc(w.a)}</div>`).join('')}</div>`:''}
-  <button class="btn" onclick="startRound(${z})">🔁 Main lagi</button>
-  <button class="btn g" onclick="mapScreen()">🗺️ Peta Safari</button>
-  <button class="btn s" onclick="lbScreen(${z})">🏆 Leaderboard</button>`;
-  G=null;
+  return list;
 }
 
-/* ===== LEADERBOARD ===== */
-function lbScreen(sel){
-  const rows=[];
-  D.profiles.forEach(p=>{const b=D.best[p.id]||{};
-    if(sel==='all'){let s=0,t=0;for(let z=1;z<=10;z++)if(b[z]){s+=b[z].s;t+=b[z].st}if(s)rows.push({p,s,t,l:'⭐'+t+'/30'})}
-    else if(b[sel])rows.push({p,s:b[sel].s,t:b[sel].st,l:stars(b[sel].st)})});
-  rows.sort((a,b)=>b.s-a.s);const top=rows.slice(0,10);
-  app.innerHTML=`<h2>🏆 Leaderboard</h2>
-  <select onchange="lbScreen(this.value==='all'?'all':+this.value)">
-  <option value="all"${sel==='all'?' selected':''}>Keseluruhan (zona 1–10)</option>
-  ${Z.map((z,i)=>`<option value="${i+1}"${sel===i+1?' selected':''}>${i+1}. ${z.n}</option>`).join('')}
-  <option value="0"${sel===0?' selected':''}>🎲 Safari Acak</option></select>
-  <div class="card">${top.length?`<table>${top.map((r,i)=>`<tr><td>${['🥇','🥈','🥉'][i]||i+1}</td><td style="font-size:26px">${r.p.av}</td><td><b>${esc(r.p.name)}</b></td><td style="text-align:right"><b>${r.s}</b><br><span class="stars" style="font-size:14px">${r.l}</span></td></tr>`).join('')}</table>`:'<div class="lbl">Belum ada skor. Yuk main dulu!</div>'}</div>
-  <button class="btn g" onclick="mapScreen()">🗺️ Kembali ke Peta</button>`;
+/** Kata-kata penting dari sebuah arti, untuk mencegah pilihan yang artinya mirip. */
+const IGNORED_TOKENS = ['yang', 'sama', 'dari', 'dibaca'];
+const meaningTokens = text =>
+  text.toLowerCase().split(/[^a-z]+/).filter(t => t.length > 3 && !IGNORED_TOKENS.includes(t));
+
+const canSpeak = 'speechSynthesis' in window;
+function speak(text) {
+  try {
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    speechSynthesis.speak(utterance);
+  } catch (e) { /* abaikan */ }
+}
+const speakButton = action => canSpeak ? `<button class="spk" data-action="${action}">🔊</button>` : '';
+
+
+/* ================================ 5. LAYAR ================================= */
+let chosenAvatar = CONFIG.avatars[0];
+
+/* ---------- Pilih / buat pemain ---------- */
+function showProfileScreen() {
+  game = null;
+  const typedName = ($('name-input') || {}).value || '';   // pertahankan ketikan saat layar digambar ulang
+  show(`
+    <h1>🦁 Safari Kata</h1>
+    <div class="lbl">Siapa yang main hari ini?</div>
+    ${db.profiles.map(p => `<button class="btn g" data-action="chooseProfile" data-arg="${p.id}">${p.avatar} ${escapeHtml(p.name)}</button>`).join('')}
+    <div class="card"><b>Pemain baru</b>
+      <input id="name-input" maxlength="12" placeholder="Nama panggilan" autocomplete="off">
+      <div class="av">${CONFIG.avatars.map(a => `<button class="${a === chosenAvatar ? 'on' : ''}" data-action="chooseAvatar" data-arg="${a}">${a}</button>`).join('')}</div>
+      <button class="btn" data-action="createProfile">Mulai! ▶</button>
+    </div>
+    <button class="btn s" data-hold="wipe">Hapus semua data (tahan 3 detik)</button>`);
+  $('name-input').value = typedName;
 }
 
-/* ===== MULAI ===== */
-D.cur&&me()?mapScreen():profileScreen();
+function createProfile() {
+  const input = $('name-input');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+  const profile = { id: Date.now().toString(36), name, avatar: chosenAvatar };
+  db.profiles.push(profile);
+  db.current = profile.id;
+  saveDb();
+  showMapScreen();
+}
+
+/* ---------- Peta zona ---------- */
+function zoneCard(zone, best) {
+  const stars = best[zone.id] ? best[zone.id].stars : 0;
+  return `<button class="zone" data-action="playZone" data-arg="${zone.id}">
+      <span class="e">${zone.emoji}</span>
+      <b>${zone.id}. ${escapeHtml(zone.name)}</b>
+      <small class="lv${zone.level}">${CONFIG.levelLabels[zone.level]} · ${wordsInZone(zone.id).length} kata</small>
+      <span class="stars">${renderStars(stars)}</span>
+    </button>`;
+}
+
+function showMapScreen() {
+  const profile = currentProfile();
+  if (!profile) return showProfileScreen();
+  const best = db.best[profile.id] || {};
+  show(`
+    <div class="row">
+      <span class="pill">${profile.avatar} ${escapeHtml(profile.name)}</span>
+      <button class="pill" style="border:0;font:inherit" data-action="changePlayer">Ganti</button>
+    </div>
+    <h2>🗺️ Peta Safari</h2>
+    <div class="lbl">Pilih zona yang kamu mau!</div>
+    <div class="grid" style="margin-top:10px">${ZONES.map(z => zoneCard(z, best)).join('')}</div>
+    <button class="btn" data-action="playZone" data-arg="${RANDOM_ZONE_ID}" style="margin-top:14px">${CONFIG.random.emoji} ${CONFIG.random.name} (${CONFIG.random.wordCount} kata campur)</button>
+    <button class="btn g" data-action="showLeaderboard" data-arg="all">🏆 Leaderboard</button>`);
+}
+
+/* ---------- Leaderboard ---------- */
+/** selection: 'all' (total semua zona) atau id zona (0 = Safari Acak). */
+function leaderboardRows(selection) {
+  const rows = [];
+  db.profiles.forEach(profile => {
+    const best = db.best[profile.id] || {};
+    if (selection === 'all') {
+      const entries = ZONES.map(z => best[z.id]).filter(Boolean);
+      const score = entries.reduce((sum, e) => sum + e.score, 0);
+      const stars = entries.reduce((sum, e) => sum + e.stars, 0);
+      if (score) rows.push({ profile, score, label: `⭐ ${stars}/${ZONES.length * 3}` });
+    } else if (best[selection]) {
+      rows.push({ profile, score: best[selection].score, label: renderStars(best[selection].stars) });
+    }
+  });
+  return rows.sort((a, b) => b.score - a.score).slice(0, CONFIG.leaderboardSize);
+}
+
+function showLeaderboardScreen(selection) {
+  const rows = leaderboardRows(selection);
+  const option = (value, label) => `<option value="${value}"${selection === value ? ' selected' : ''}>${label}</option>`;
+  const medal = i => ['🥇', '🥈', '🥉'][i] || i + 1;
+  show(`
+    <h2>🏆 Leaderboard</h2>
+    <select data-change="showLeaderboard">
+      ${option('all', `Keseluruhan (semua zona)`)}
+      ${ZONES.map(z => option(z.id, `${z.id}. ${escapeHtml(z.name)}`)).join('')}
+      ${option(RANDOM_ZONE_ID, `${CONFIG.random.emoji} ${CONFIG.random.name}`)}
+    </select>
+    <div class="card">${rows.length
+      ? `<table>${rows.map((r, i) => `<tr>
+          <td>${medal(i)}</td><td style="font-size:26px">${r.profile.avatar}</td>
+          <td><b>${escapeHtml(r.profile.name)}</b></td>
+          <td style="text-align:right"><b>${r.score}</b><br><span class="stars" style="font-size:14px">${r.label}</span></td></tr>`).join('')}</table>`
+      : '<div class="lbl">Belum ada skor. Yuk main dulu!</div>'}</div>
+    <button class="btn g" data-action="showMap">🗺️ Kembali ke Peta</button>`);
+}
+
+
+/* ================================ 6. RONDE ================================= */
+let game = null;   // status ronde yang sedang berjalan (null jika tidak sedang main)
+
+/* ---------- Membuat soal ---------- */
+function buildQuestions(zone) {
+  const pool = zone.id === RANDOM_ZONE_ID
+    ? shuffle(WORDS.slice()).slice(0, zone.wordCount)
+    : wordsInZone(zone.id);
+  return shuffle(pool.slice()).map(word => ({
+    word,
+    reversed: Math.random() < zone.reverseChance,     // true: Indonesia -> Inggris
+    options: buildOptions(word, zone.choices),
+  }));
+}
+
+/** 1 jawaban benar + pengecoh (diutamakan dari zona yang sama, artinya tidak boleh mirip). */
+function buildOptions(word, count) {
+  const tooSimilar = other =>
+    other === word || meaningTokens(other.indonesian).some(t => meaningTokens(word.indonesian).includes(t));
+  const decoys = shuffle(WORDS.filter(w => w.zone === word.zone && !tooSimilar(w)))
+    .concat(shuffle(WORDS.filter(w => w.zone !== word.zone && !tooSimilar(w))));
+  return shuffle([word, ...decoys.slice(0, count - 1)]);
+}
+
+/* ---------- Memulai ronde ---------- */
+function startRound(zoneId) {
+  const zone = getZone(zoneId);
+  const questions = buildQuestions(zone);
+  game = {
+    zone, questions, index: 0,
+    lives: CONFIG.startingLives, score: 0, streak: 0, correct: 0, missed: [],
+    roundTimeLeft: questions.length * CONFIG.secondsPerWordInRound,
+    running: false, answered: false, question: null, questionTimeLeft: 0,
+  };
+  runCountdown(game);
+}
+
+function runCountdown(thisGame) {
+  let n = 3;
+  (function step() {
+    if (game !== thisGame) return;                  // ronde dibatalkan
+    if (n === 0) return showQuestion();
+    show(`<div class="cd">${n}</div><div class="mascot">${thisGame.zone.mascot}</div><h2 style="color:#fff">Siap-siap!</h2>`);
+    n--;
+    setTimeout(step, 800);
+  })();
+}
+
+/* ---------- Tampilan soal ---------- */
+const heartsText = () => '❤️'.repeat(game.lives) + '🖤'.repeat(CONFIG.startingLives - game.lives);
+
+function hudHtml() {
+  return `<div class="row">
+      <span class="pill" id="hud-lives">${heartsText()}</span>
+      <span class="pill">${game.index + 1}/${game.questions.length}</span>
+      <span class="pill" id="hud-score">⭐ ${game.score}</span>
+    </div>
+    <div class="row" style="margin-top:8px"><small>Ronde</small><div class="bar"><i id="round-bar"></i></div><b id="round-time"></b></div>`;
+}
+
+function questionHtml(q) {
+  return q.reversed
+    ? `<div class="lbl">Apa bahasa Inggrisnya?</div><div class="sent big">${escapeHtml(q.word.indonesian)}</div>`
+    : `<div class="lbl">Apa arti kata yang bergaris bawah?</div><div class="sent">${underline(q.word.sentence)}</div>${speakButton('speakQuestion')}`;
+}
+
+function showQuestion() {
+  const q = game.questions[game.index];
+  game.question = q;
+  game.questionTimeLeft = CONFIG.secondsPerQuestion;
+  game.answered = false;
+  game.running = true;
+  show(`${hudHtml()}
+    <div class="mascot" id="mascot">${game.zone.mascot}</div>
+    <div class="card">${questionHtml(q)}</div>
+    <div class="row"><small>Soal</small><div class="bar"><i id="question-bar"></i></div><b id="question-time"></b></div>
+    <div id="answer-area">${q.options.map((o, i) =>
+      `<button class="opt" data-action="answer" data-arg="${i}">${escapeHtml(q.reversed ? o.english : o.indonesian)}</button>`).join('')}</div>`);
+  updateTimerBars();
+}
+
+/* ---------- Timer ---------- */
+function barColor(fraction) { return fraction > 0.5 ? '#3aa655' : fraction > 0.25 ? '#f5b301' : '#e0493a'; }
+
+function paintBar(barId, textId, secondsLeft, totalSeconds) {
+  const fraction = Math.max(0, secondsLeft / totalSeconds);
+  $(barId).style.width = fraction * 100 + '%';
+  $(barId).style.background = barColor(fraction);
+  $(textId).textContent = Math.ceil(Math.max(0, secondsLeft)) + 's';
+}
+
+function updateTimerBars() {
+  if (!$('round-bar')) return;
+  paintBar('round-bar', 'round-time', game.roundTimeLeft, game.questions.length * CONFIG.secondsPerWordInRound);
+  paintBar('question-bar', 'question-time', game.questionTimeLeft, CONFIG.secondsPerQuestion);
+}
+
+function onTick() {
+  if (!game || !game.running) return;               // timer berhenti saat penjelasan tampil
+  game.questionTimeLeft -= TICK_SECONDS;
+  game.roundTimeLeft -= TICK_SECONDS;
+  updateTimerBars();
+  if (game.roundTimeLeft <= 0) { game.running = false; endRound('time'); }
+  else if (game.questionTimeLeft <= 0) answerQuestion(-1);   // -1 = waktu habis
+}
+
+/* ---------- Menjawab ---------- */
+const randomOf = list => list[Math.floor(Math.random() * list.length)];
+
+function streakBonusFor(streak) {
+  const levels = Object.keys(CONFIG.streakBonus).map(Number);
+  const key = Math.min(streak, Math.max(...levels));
+  return CONFIG.streakBonus[key] || 0;
+}
+
+/** Memperbarui skor/nyawa untuk jawaban benar; mengembalikan pesan untuk anak. */
+function applyCorrectAnswer() {
+  const speedBonus = Math.round(CONFIG.maxSpeedBonus * Math.max(0, game.questionTimeLeft) / CONFIG.secondsPerQuestion);
+  game.streak++;
+  game.correct++;
+  const streakBonus = streakBonusFor(game.streak);
+  const points = CONFIG.baseScore + speedBonus + streakBonus;
+  game.score += points;
+
+  let message = `${randomOf(['Hebat! 🎉', 'Pintar! 👏', 'Benar! 🌟'])} +${points}`;
+  if (streakBonus) message += ` 🔥 Beruntun +${streakBonus}`;
+  if (game.streak % CONFIG.streakForExtraLife === 0 && game.lives < CONFIG.startingLives) {
+    game.lives++;
+    message += ' ❤️ +1 nyawa!';
+  }
+  return message;
+}
+
+function applyWrongAnswer(timedOut) {
+  game.streak = 0;
+  game.lives--;
+  game.missed.push(game.question.word);
+  return timedOut ? 'Waktu habis! ⏰' : 'Hampir! Yuk lihat artinya 💪';
+}
+
+function answerQuestion(choiceIndex) {              // choiceIndex -1 = waktu habis
+  if (!game || game.answered) return;
+  game.answered = true;
+  game.running = false;
+
+  const q = game.question;
+  const isCorrect = choiceIndex >= 0 && q.options[choiceIndex] === q.word;
+  const message = isCorrect ? applyCorrectAnswer() : applyWrongAnswer(choiceIndex < 0);
+
+  document.querySelectorAll('.opt').forEach((button, i) => {
+    button.disabled = true;
+    if (q.options[i] === q.word) button.classList.add('ok');
+    else if (i === choiceIndex) button.classList.add('no');
+  });
+  $('mascot').classList.add(isCorrect ? 'hop' : 'shake');
+  $('hud-lives').textContent = heartsText();
+  $('hud-score').textContent = '⭐ ' + game.score;
+  showExplanation(message, isCorrect);
+}
+
+function showExplanation(message, isCorrect) {
+  const w = game.question.word;
+  const isLast = game.lives <= 0 || game.index + 1 >= game.questions.length;
+  $('answer-area').innerHTML = `
+    <div class="card fb">
+      <div style="font-weight:bold;font-size:20px;color:${isCorrect ? '#2e9b4a' : '#d1392b'}">${message}</div>
+      <div class="w">${w.emoji} ${escapeHtml(w.english)} = ${escapeHtml(w.indonesian)}</div>
+      <div class="sent" style="font-size:19px">${underline(w.sentence)}</div>
+      <div class="tr">${escapeHtml(w.translation)}</div>
+      ${speakButton('speakAnswer')}
+    </div>
+    <button class="btn g" data-action="nextQuestion">${isLast ? 'Selesai 🏁' : 'Lanjut ▶'}</button>`;
+}
+
+function nextQuestion() {
+  if (game.lives <= 0) return endRound('lives');
+  if (game.index + 1 >= game.questions.length) return endRound('done');
+  game.index++;
+  showQuestion();
+}
+
+/* ---------- Akhir ronde ---------- */
+function starsFor(correct, total) {
+  const ratio = correct / total;
+  return CONFIG.starThresholds.filter(t => ratio >= t).length;
+}
+
+/** Menyimpan skor terbaik; mengembalikan true jika skor ini rekor baru. */
+function saveBestScore(zoneId, score, stars) {
+  const profileBest = db.best[currentProfile().id] = db.best[currentProfile().id] || {};
+  const old = profileBest[zoneId];
+  const isNewBest = !old || score > old.score;
+  profileBest[zoneId] = { score: isNewBest ? score : old.score, stars: Math.max(stars, old ? old.stars : 0) };
+  saveDb();
+  return isNewBest;
+}
+
+const END_TITLES = {
+  done: 'Ronde selesai! 🎉',
+  lives: 'Yah, nyawa habis. Yuk coba lagi! 💪',
+  time: 'Waktu ronde habis! ⏰',
+};
+
+function endRound(reason) {
+  game.running = false;
+  const g = game;
+  const total = g.questions.length;
+  const endBonus = Math.max(0, g.lives) * CONFIG.lifeBonusPerLife + Math.max(0, Math.floor(g.roundTimeLeft));
+  g.score += endBonus;
+  const stars = starsFor(g.correct, total);
+  const isNewBest = saveBestScore(g.zone.id, g.score, stars);
+
+  show(`
+    <div class="mascot">${stars >= 2 ? '🥳' : '🤗'}</div>
+    <h2>${END_TITLES[reason]}</h2>
+    <div class="card" style="text-align:center">
+      <div class="stars" style="font-size:42px">${renderStars(stars)}</div>
+      <div style="font-size:34px;font-weight:bold">⭐ ${g.score}</div>
+      ${isNewBest ? '<div style="color:#2e9b4a;font-weight:bold">🏅 Skor terbaikmu!</div>' : ''}
+      <div class="lbl">Benar ${g.correct} dari ${total} · Bonus akhir +${endBonus}</div>
+    </div>
+    ${g.missed.length ? `<div class="card miss"><b>📝 Kata yang perlu diulang:</b>
+      ${g.missed.map(w => `<div>${w.emoji} <b>${escapeHtml(w.english)}</b> = ${escapeHtml(w.indonesian)}</div>`).join('')}</div>` : ''}
+    <button class="btn" data-action="playZone" data-arg="${g.zone.id}">🔁 Main lagi</button>
+    <button class="btn g" data-action="showMap">🗺️ Peta Safari</button>
+    <button class="btn s" data-action="showLeaderboard" data-arg="${g.zone.id}">🏆 Leaderboard</button>`);
+  game = null;
+}
+
+
+/* ================================ 7. EVENT ================================= */
+/* Tambah fitur baru: buat fungsinya, daftarkan di sini, lalu pakai
+   data-action="namaAksi" (dan data-arg="nilai") pada tombol di HTML. */
+const ACTIONS = {
+  chooseProfile: id => { db.current = id; saveDb(); showMapScreen(); },
+  createProfile,
+  chooseAvatar: avatar => { chosenAvatar = avatar; showProfileScreen(); },
+  changePlayer: showProfileScreen,
+  playZone: id => startRound(Number(id)),
+  answer: i => answerQuestion(Number(i)),
+  nextQuestion,
+  speakQuestion: () => speak(stripBrackets(game.question.word.sentence)),
+  speakAnswer: () => speak(game.question.word.english + '. ' + stripBrackets(game.question.word.sentence)),
+  showMap: showMapScreen,
+  showLeaderboard: arg => showLeaderboardScreen(arg === 'all' ? 'all' : Number(arg)),
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if (el && ACTIONS[el.dataset.action]) ACTIONS[el.dataset.action](el.dataset.arg, el);
+});
+
+document.addEventListener('change', e => {          // dropdown leaderboard
+  const name = e.target.dataset.change;
+  if (name && ACTIONS[name]) ACTIONS[name](e.target.value);
+});
+
+/* Tombol "Hapus semua data": harus ditahan beberapa detik */
+let holdTimer = null;
+document.addEventListener('pointerdown', e => {
+  if (e.target.closest('[data-hold="wipe"]')) {
+    holdTimer = setTimeout(() => { resetDb(); showProfileScreen(); }, CONFIG.resetHoldMs);
+  }
+});
+['pointerup', 'pointerleave', 'pointercancel'].forEach(type =>
+  document.addEventListener(type, () => clearTimeout(holdTimer), true));
+
+
+/* ================================= 8. MULAI ================================ */
+try {
+  loadGameData();
+  setInterval(onTick, TICK_SECONDS * 1000);
+  currentProfile() ? showMapScreen() : showProfileScreen();
+} catch (err) {
+  show(`<div class="card"><h2>⚠️ Data game bermasalah</h2>
+    <p>Periksa blok <code>game-data</code> (JSON) di file ini:</p>
+    <pre style="white-space:pre-wrap;font-size:14px">${escapeHtml(err.message)}</pre></div>`);
+}
+
 </script>
 </body>
 </html>
