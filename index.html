@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Safari Kata</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;touch-action:manipulation}
+body{font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;background:linear-gradient(#bfe8a3,#7cc576);color:#2b3a1f;font-size:17px}
+#app{max-width:480px;margin:0 auto;padding:12px;min-height:100vh}
+h1,h2{margin:6px 0;text-align:center}
+.card{background:#fff;border-radius:20px;padding:14px;margin:10px 0;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.btn{display:block;width:100%;min-height:56px;border:0;border-radius:16px;background:#ff9f1c;color:#fff;font:inherit;font-weight:bold;font-size:19px;padding:10px;margin:8px 0;box-shadow:0 4px 0 #c97a00}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #c97a00}
+.btn.g{background:#3aa655;box-shadow:0 4px 0 #26793b}.btn.s{background:#8a9a7b;box-shadow:0 4px 0 #66745a;font-size:16px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.zone{background:#fff;border:0;border-radius:18px;padding:10px 6px;font:inherit;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.15);min-height:112px}
+.zone:active{transform:translateY(3px)}
+.zone .e{font-size:34px}.zone b{display:block;font-size:15px}.zone small{display:block;color:#666}
+.lv1{color:#2e9b4a}.lv2{color:#e08a00}.lv3{color:#d1392b}
+.stars{color:#f5b301;font-size:18px;letter-spacing:2px}
+.av{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.av button{font-size:30px;border:3px solid transparent;border-radius:14px;background:#f1f6ea;width:54px;height:54px}
+.av button.on{border-color:#ff9f1c;background:#fff1d6}
+input,select{width:100%;font:inherit;font-size:20px;padding:12px;border-radius:14px;border:3px solid #cfe3bf;margin:6px 0}
+.pill{background:#fff;border-radius:999px;padding:4px 12px;font-weight:bold}
+.bar{height:14px;background:#e3ecd9;border-radius:9px;overflow:hidden;flex:1}
+.bar i{display:block;height:100%;width:100%;background:#3aa655;transition:width .1s linear,background .3s}
+.mascot{font-size:64px;text-align:center;line-height:1.1}
+.hop{animation:hop .6s}.shake{animation:shake .5s}
+@keyframes hop{30%{transform:translateY(-22px)}60%{transform:translateY(0)}80%{transform:translateY(-8px)}}
+@keyframes shake{25%{transform:translateX(-10px)}50%{transform:translateX(10px)}75%{transform:translateX(-6px)}}
+.lbl{color:#6a7a5a;font-size:15px;text-align:center}
+.sent{font-size:23px;font-weight:bold;text-align:center;margin:8px 0;line-height:1.35}.sent.big{font-size:30px}
+.sent u{text-decoration-thickness:4px;text-decoration-color:#ff9f1c;text-underline-offset:4px;color:#d96b00}
+.spk{display:block;margin:4px auto;font-size:26px;border:0;background:#eaf5de;border-radius:50%;width:48px;height:48px}
+.opt{display:block;width:100%;min-height:58px;margin:8px 0;border:3px solid #cfe3bf;background:#fff;border-radius:16px;font:inherit;font-size:19px;font-weight:bold;padding:8px 12px;box-shadow:0 4px 0 rgba(0,0,0,.1)}
+.opt.ok{background:#c9f0cf;border-color:#3aa655}.opt.no{background:#ffd5d0;border-color:#e0493a}
+.cd{font-size:120px;text-align:center;font-weight:bold;color:#fff;text-shadow:0 4px 0 #26793b;margin-top:25vh}
+.fb{text-align:center}.fb .w{font-size:28px;font-weight:bold}.fb .tr{color:#555;font-size:16px}
+table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-bottom:1px solid #eee}
+.miss{font-size:16px;text-align:left}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ===== DATA: kata|arti|kalimat ([kata] = digarisbawahi)|terjemahan|emoji ===== */
+const Z=[
+{n:'Gerbang Safari',e:'🚪',l:1,m:'🐘',w:`number|bilangan / angka|Find the missing [number] in the box.|Cari bilangan yang hilang di dalam kotak.|🔢
+find|cari|[Find] the value of 6 + 7.|Carilah nilai dari 6 + 7.|🔍
+value|nilai|What is the [value] of 5 + 5 − 3?|Berapa nilai dari 5 + 5 − 3?|💎
+missing|hilang|Write the [missing] number: 2, 4, __, 8.|Tulis bilangan yang hilang: 2, 4, __, 8.|❓
+sum|jumlah|The [sum] of 8 and 9 is what number?|Jumlah dari 8 dan 9 adalah bilangan berapa?|➕
+total|total / jumlah seluruhnya|What is the [total] of 12, 5 and 3?|Berapa total dari 12, 5, dan 3?|🧮
+each|masing-masing|[Each] child has 4 pencils.|Masing-masing anak punya 4 pensil.|✏️
+next|berikutnya|What is the [next] number: 3, 6, 9, __?|Bilangan berikutnya: 3, 6, 9, __?|⏭️
+altogether|seluruhnya|Ali has 7 cards and Budi has 5. How many cards are there [altogether]?|Ali punya 7 kartu dan Budi punya 5. Berapa kartu seluruhnya?|🃏
+give|memberi|Sara will [give] 3 stickers to her friend.|Sara akan memberi 3 stiker kepada temannya.|🎁`},
+{n:'Kandang Kelinci',e:'🐰',l:1,m:'🐰',w:`children|anak-anak|There are 8 [children] in the park.|Ada 8 anak-anak di taman.|🧒
+girls|anak perempuan|5 [girls] and 4 boys are in the class.|5 anak perempuan dan 4 anak laki-laki ada di kelas.|👧
+rabbits|kelinci|3 [rabbits] eat 6 carrots.|3 kelinci memakan 6 wortel.|🐰
+chickens|ayam|A farmer has 9 [chickens].|Seorang petani punya 9 ayam.|🐔
+apples|apel|There are 12 [apples] in the basket.|Ada 12 apel di dalam keranjang.|🍎
+sweets|permen|Mia buys 10 [sweets].|Mia membeli 10 permen.|🍬
+balls|bola|The box has 6 red [balls].|Kotak itu berisi 6 bola merah.|⚽
+balloons|balon|Tom has 7 [balloons]. 2 of them burst.|Tom punya 7 balon. 2 di antaranya meletus.|🎈
+coins|koin|Dina has 5 [coins] in her purse.|Dina punya 5 koin di dompetnya.|🪙
+cans|kaleng|There are 4 [cans] on each shelf.|Ada 4 kaleng di setiap rak.|🥫`},
+{n:'Taman Waktu',e:'⏰',l:1,m:'🦒',w:`time|waktu|What [time] is it on the clock?|Jam berapa pada jam itu?|🕐
+minutes|menit|The bus takes 15 [minutes] to arrive.|Bus butuh 15 menit untuk tiba.|⏱️
+days|hari|There are 7 [days] in a week.|Ada 7 hari dalam seminggu.|📅
+week|minggu (7 hari)|Ken reads 2 books every [week].|Ken membaca 2 buku setiap minggu.|🗓️
+walk|berjalan|Raka will [walk] 4 steps forward.|Raka akan berjalan 4 langkah ke depan.|🚶
+legs|kaki (hewan)|A cat has 4 [legs]. How many legs do 3 cats have?|Kucing punya 4 kaki. Berapa kaki dari 3 kucing?|🐾
+bag|kantong / tas|Each [bag] has 5 oranges.|Setiap kantong berisi 5 jeruk.|👜
+pieces|potongan|The cake is cut into 8 [pieces].|Kue itu dipotong menjadi 8 potong.|🍰
+colour|warna|What [colour] is the next shape?|Apa warna bangun berikutnya?|🎨
+left|sisa|Ben has 9 sweets and gives 4 away. How many are [left]?|Ben punya 9 permen dan memberi 4. Berapa permen yang tersisa?|🍭`},
+{n:'Rumah Bentuk',e:'🔺',l:2,m:'🐒',w:`figure|gambar / bangun|Look at the [figure] below.|Lihat gambar di bawah ini.|🖼️
+diagram|diagram|Count the dots in the [diagram].|Hitung titik pada diagram.|📊
+circle|lingkaran|Draw a [circle] around the biggest number.|Lingkari bilangan terbesar.|⭕
+squares|persegi / kotak|How many [squares] are in the figure?|Ada berapa persegi pada gambar?|🟦
+triangles|segitiga|Count all the [triangles] in the diagram.|Hitung semua segitiga pada diagram.|🔺
+cubes|kubus|Tim builds a tower with 10 [cubes].|Tim membangun menara dari 10 kubus.|🧊
+pattern|pola|Look at the [pattern]: red, blue, red, blue.|Lihat pola: merah, biru, merah, biru.|🔁
+sequence|urutan / deret|Find the next number in the [sequence].|Cari bilangan berikutnya dalam deret.|🔗
+shaded|diarsir|How many squares are [shaded]?|Ada berapa persegi yang diarsir?|🖍️
+row|baris|There are 5 chairs in each [row].|Ada 5 kursi di setiap baris.|💺`},
+{n:'Pos Penimbangan',e:'📏',l:2,m:'🦁',w:`mass|massa|The [mass] of the bag is 3 kilograms.|Massa tas itu 3 kilogram.|⚖️
+weight|berat|Which fruit has the greater [weight]?|Buah mana yang lebih berat?|🏋️
+grams|gram|A pencil has a mass of 10 [grams].|Sebuah pensil bermassa 10 gram.|🪶
+metres|meter|The rope is 5 [metres] long.|Tali itu panjangnya 5 meter.|📏
+shortest|terpendek|Which string is the [shortest]?|Tali mana yang paling pendek?|🐜
+paths|jalur|How many [paths] go from A to B?|Ada berapa jalur dari A ke B?|🛤️
+ways|cara|In how many [ways] can you pick 2 balls?|Ada berapa cara memilih 2 bola?|🔀
+least|paling sedikit|Which box has the [least] sweets?|Kotak mana yang permennya paling sedikit?|⬇️
+minimum|minimum / terkecil yang mungkin|What is the [minimum] number of coins needed?|Berapa jumlah koin minimum yang dibutuhkan?|🔽
+digits|angka penyusun bilangan|The number 345 has three [digits].|Bilangan 345 punya tiga angka (digit).|🔟`},
+{n:'Kandang Hewan Besar',e:'🐧',l:2,m:'🐧',w:`ostrich|burung unta|An [ostrich] has 2 legs.|Burung unta punya 2 kaki.|🐦
+goat|kambing|A [goat] has 4 legs.|Kambing punya 4 kaki.|🐐
+bull|banteng / sapi jantan|The [bull] eats 6 kg of grass.|Banteng makan 6 kg rumput.|🐂
+hound|anjing pemburu|The [hound] runs 8 metres.|Anjing pemburu berlari 8 meter.|🐕
+penguin|penguin|One [penguin] catches 3 fish.|Seekor penguin menangkap 3 ikan.|🐧
+bear|beruang|The [bear] has 5 jars of honey.|Beruang punya 5 toples madu.|🐻
+queue|antrean|Ana is 4th in the [queue].|Ana berada di urutan ke-4 dalam antrean.|🧍
+corridor|koridor / lorong|The [corridor] is 10 metres long.|Koridor itu panjangnya 10 meter.|🚪
+stairs|tangga|There are 12 steps on the [stairs].|Ada 12 anak tangga pada tangga itu.|🪜`},
+{n:'Gudang Perlengkapan',e:'🧵',l:3,m:'🐯',w:`knot|simpul|Ravi ties a [knot] in the rope.|Ravi membuat simpul pada tali.|🪢
+rope|tali tebal|The [rope] is cut into 3 equal parts.|Tali itu dipotong menjadi 3 bagian sama panjang.|➰
+strings|benang / senar|There are 6 [strings] on the guitar.|Ada 6 senar pada gitar.|🎸
+wire|kawat|A [wire] 20 cm long is bent into a square.|Kawat sepanjang 20 cm dibengkokkan menjadi persegi.|🔌
+matchsticks|batang korek api|Use 8 [matchsticks] to make 2 squares.|Pakai 8 batang korek api untuk membuat 2 persegi.|🔥
+blindfolded|ditutup matanya|Eli is [blindfolded] and picks a ball.|Mata Eli ditutup dan ia mengambil sebuah bola.|🙈
+stacked|ditumpuk|5 boxes are [stacked] on the table.|5 kotak ditumpuk di atas meja.|📦
+tiles|ubin|The floor has 20 [tiles].|Lantai itu punya 20 ubin.|🔲
+bicycle|sepeda|Each [bicycle] has 2 wheels.|Setiap sepeda punya 2 roda.|🚲`},
+{n:'Laboratorium Bentuk',e:'🔷',l:3,m:'🦓',w:`pyramid|piramida|A [pyramid] has 5 faces.|Piramida (alas segi empat) punya 5 sisi.|🏜️
+pentagon|segi lima|A [pentagon] has 5 sides.|Segi lima punya 5 sisi.|⬟
+hexagon|segi enam|A [hexagon] has 6 sides.|Segi enam punya 6 sisi.|⬡
+rectangle|persegi panjang|The [rectangle] is 5 cm long and 2 cm wide.|Persegi panjang itu panjangnya 5 cm dan lebarnya 2 cm.|🟫
+diagonal|diagonal|Draw a [diagonal] in the square.|Gambar diagonal di dalam persegi.|↗️
+perimeter|keliling|Find the [perimeter] of the square.|Cari keliling persegi itu.|📐
+grid|kisi-kisi|Colour 3 boxes on the [grid].|Warnai 3 kotak pada kisi-kisi.|🔳
+dartboard|papan panah|Ken hits 10 on the [dartboard].|Ken mengenai angka 10 pada papan panah.|🎯
+reflection|pantulan / bayangan cermin|Draw the [reflection] of the shape.|Gambar pantulan (bayangan cermin) bangun itu.|🪞`},
+{n:'Pondok Hitung',e:'🔢',l:3,m:'🐼',w:`remainder|sisa hasil bagi|What is the [remainder] when 17 is divided by 5?|Berapa sisanya jika 17 dibagi 5?|➗
+divided|dibagi|20 is [divided] by 4.|20 dibagi 4.|✂️
+multiplication|perkalian|Do the [multiplication]: 3 × 6.|Kerjakan perkalian: 3 × 6.|✖️
+product|hasil kali|The [product] of 4 and 5 is 20.|Hasil kali 4 dan 5 adalah 20.|🔶
+factor|faktor|Is 3 a [factor] of 12?|Apakah 3 faktor dari 12?|🔑
+prime|bilangan prima|7 is a [prime] number.|7 adalah bilangan prima.|🥇
+odd|ganjil|Circle the [odd] numbers: 2, 3, 4, 5.|Lingkari bilangan ganjil: 2, 3, 4, 5.|1️⃣
+even|genap|Which number is [even]: 7, 8 or 9?|Bilangan mana yang genap: 7, 8, atau 9?|2️⃣
+consecutive|berurutan|5, 6 and 7 are [consecutive] numbers.|5, 6, dan 7 adalah bilangan berurutan.|⛓️`},
+{n:'Singgasana Raja',e:'👑',l:3,m:'🦉',w:`palindromic|palindrom (sama dibaca dua arah)|121 is a [palindromic] number.|121 adalah bilangan palindrom.|🔄
+guarantee|menjamin|How many socks do you need to [guarantee] a pair?|Berapa kaos kaki yang dibutuhkan untuk menjamin ada sepasang?|✅
+ensure|memastikan|Pick 3 balls to [ensure] two have the same colour.|Ambil 3 bola untuk memastikan dua bola berwarna sama.|🛡️
+pigeonhole|sarang merpati|3 pigeons in 2 holes: by the [pigeonhole] principle, one hole has 2.|3 merpati di 2 lubang: menurut prinsip sarang merpati, satu lubang berisi 2.|🕊️
+weigh|menimbang|We [weigh] the apples on a scale.|Kami menimbang apel pada timbangan.|🧺
+scale|timbangan|The [scale] shows 500 grams.|Timbangan menunjukkan 500 gram.|🛒
+pot|pot bunga|There are 3 flowers in each [pot].|Ada 3 bunga di setiap pot.|🪴
+flight|rangkaian tangga|There are 12 steps in one [flight] of stairs.|Ada 12 anak tangga dalam satu rangkaian tangga.|🏢`}
+];
+const WORDS=[];Z.forEach((z,i)=>z.w.split('\n').forEach(l=>{const p=l.split('|');WORDS.push({w:p[0],a:p[1],s:p[2],t:p[3],e:p[4],z:i+1})}));
+const AVS=['🐘','🦒','🐒','🦁','🐧','🐯','🦓','🐼','🦉','🐸'];
+const LVT=['','Mudah','Sedang','Sulit'];
+const QT=15,STOP=['yang','sama','dari','dibaca'];
+
+/* ===== STORAGE ===== */
+const KEY='safariKataV1';let D={profiles:[],cur:null,best:{}};
+try{Object.assign(D,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}};
+
+/* ===== HELPERS ===== */
+const $=id=>document.getElementById(id),app=$('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hl=s=>esc(s).replace(/\[(.+?)\]/g,'<u>$1</u>'),plain=s=>s.replace(/[\[\]]/g,'');
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const tok=s=>s.toLowerCase().split(/[^a-z]+/).filter(t=>t.length>3&&!STOP.includes(t));
+const me=()=>D.profiles.find(p=>p.id===D.cur);
+const stars=n=>'★'.repeat(n)+'☆'.repeat(3-n);
+const tts='speechSynthesis' in window;
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+let G=null;
+
+/* ===== PROFIL ===== */
+let selAv=AVS[0],holdT=null;
+function profileScreen(){
+  G=null;
+  app.innerHTML=`<h1>🦁 Safari Kata</h1><div class="lbl">Siapa yang main hari ini?</div>
+  ${D.profiles.map(p=>`<button class="btn g" onclick="pick('${p.id}')">${p.av} ${esc(p.name)}</button>`).join('')}
+  <div class="card"><b>Pemain baru</b>
+  <input id="nm" maxlength="12" placeholder="Nama panggilan" autocomplete="off">
+  <div class="av">${AVS.map(a=>`<button class="${a===selAv?'on':''}" onclick="selAv='${a}';profileScreen2()">${a}</button>`).join('')}</div>
+  <button class="btn" onclick="addP()">Mulai! ▶</button></div>
+  <button class="btn s" onpointerdown="holdT=setTimeout(wipe,3000)" onpointerup="clearTimeout(holdT)" onpointerleave="clearTimeout(holdT)">Hapus semua data (tahan 3 detik)</button>`;
+}
+function profileScreen2(){const v=($('nm')||{}).value||'';profileScreen();$('nm').value=v}
+function addP(){const n=$('nm').value.trim();if(!n){$('nm').focus();return}
+  const p={id:Date.now().toString(36),name:n,av:selAv};D.profiles.push(p);D.cur=p.id;save();mapScreen()}
+function pick(id){D.cur=id;save();mapScreen()}
+function wipe(){D={profiles:[],cur:null,best:{}};save();profileScreen()}
+
+/* ===== PETA ===== */
+function mapScreen(){
+  const p=me();if(!p)return profileScreen();const b=D.best[p.id]||{};
+  const zc=(i,z)=>`<button class="zone" onclick="startRound(${i})"><span class="e">${z.e}</span><b>${i}. ${z.n}</b><small class="lv${z.l}">${LVT[z.l]} · ${z.w.split('\n').length} kata</small><span class="stars">${stars(b[i]?b[i].st:0)}</span></button>`;
+  app.innerHTML=`<div class="row"><span class="pill">${p.av} ${esc(p.name)}</span><button class="pill" style="border:0;font:inherit" onclick="profileScreen()">Ganti</button></div>
+  <h2>🗺️ Peta Safari</h2><div class="lbl">Pilih zona yang kamu mau!</div>
+  <div class="grid" style="margin-top:10px">${Z.map((z,i)=>zc(i+1,z)).join('')}</div>
+  <button class="btn" onclick="startRound(0)" style="margin-top:14px">🎲 Safari Acak (10 kata campur)</button>
+  <button class="btn g" onclick="lbScreen('all')">🏆 Leaderboard</button>`;
+}
+
+/* ===== RONDE ===== */
+function buildQs(z){
+  const pool=z?WORDS.filter(x=>x.z==z):shuffle(WORDS.slice()).slice(0,10);
+  const nopt=(z>=6||z==0)?4:3,revP=(z>=8||z==0)?.3:0;
+  return shuffle(pool.slice()).map(w=>{
+    const rev=Math.random()<revP,bad=x=>x===w||tok(x.a).some(t=>tok(w.a).includes(t));
+    const c=shuffle(WORDS.filter(x=>x.z==w.z&&!bad(x))).concat(shuffle(WORDS.filter(x=>x.z!=w.z&&!bad(x))));
+    return{w,rev,opts:shuffle([w].concat(c.slice(0,nopt-1)))};
+  });
+}
+function startRound(z){
+  const qs=buildQs(z);
+  G={z,qs,i:0,lives:3,score:0,streak:0,correct:0,miss:[],rLeft:qs.length*10,run:false,m:z?Z[z-1].m:'🦜'};
+  let n=3;const tick=()=>{if(!G||G.z!==z)return;if(n==0){showQ();return}
+    app.innerHTML=`<div class="cd">${n}</div><div class="mascot">${G.m}</div><h2 style="color:#fff">Siap-siap!</h2>`;n--;setTimeout(tick,800)};tick();
+}
+const hearts=()=>'❤️'.repeat(G.lives)+'🖤'.repeat(3-G.lives);
+function hud(){return`<div class="row"><span class="pill" id="hr">${hearts()}</span><span class="pill">${G.i+1}/${G.qs.length}</span><span class="pill" id="sc">⭐ ${G.score}</span></div>
+<div class="row" style="margin-top:8px"><small>Ronde</small><div class="bar"><i id="rb"></i></div><b id="rt"></b></div>`}
+function showQ(){
+  const q=G.qs[G.i],w=q.w;G.q=q;G.qLeft=QT;G.ans=false;G.run=true;
+  const body=q.rev?`<div class="lbl">Apa bahasa Inggrisnya?</div><div class="sent big">${esc(w.a)}</div>`
+    :`<div class="lbl">Apa arti kata yang bergaris bawah?</div><div class="sent">${hl(w.s)}</div>${tts?'<button class="spk" onclick="speak(G.q.w.s.replace(/[\\[\\]]/g,\'\'))">🔊</button>':''}`;
+  app.innerHTML=hud()+`<div class="mascot" id="ms">${G.m}</div><div class="card">${body}</div>
+  <div class="row"><small>Soal</small><div class="bar"><i id="qb"></i></div><b id="qt"></b></div>
+  <div id="fb">${q.opts.map((o,i)=>`<button class="opt" onclick="answer(${i})">${esc(q.rev?o.w:o.a)}</button>`).join('')}</div>`;
+  bars();
+}
+function bars(){
+  if(!$('rb'))return;const rp=G.rLeft/(G.qs.length*10),qp=G.qLeft/QT;
+  const col=p=>p>.5?'#3aa655':p>.25?'#f5b301':'#e0493a';
+  $('rb').style.width=Math.max(0,rp*100)+'%';$('rb').style.background=col(rp);$('rt').textContent=Math.ceil(Math.max(0,G.rLeft))+'s';
+  $('qb').style.width=Math.max(0,qp*100)+'%';$('qb').style.background=col(qp);$('qt').textContent=Math.ceil(Math.max(0,G.qLeft))+'s';
+}
+setInterval(()=>{
+  if(!G||!G.run)return;G.qLeft-=.1;G.rLeft-=.1;bars();
+  if(G.rLeft<=0){G.run=false;endRound('time')}else if(G.qLeft<=0)answer(-1);
+},100);
+function answer(i){
+  if(!G||G.ans)return;G.ans=true;G.run=false;
+  const q=G.q,w=q.w,ok=i>=0&&q.opts[i]===w;let msg,pts=0,extra='';
+  if(ok){
+    pts=100+Math.round(50*Math.max(0,G.qLeft)/QT);G.streak++;G.correct++;
+    const sb=G.streak>=5?50:G.streak==4?30:G.streak==3?20:0;pts+=sb;if(sb)extra=` 🔥 Beruntun +${sb}`;
+    if(G.streak%5==0&&G.lives<3){G.lives++;extra+=' ❤️ +1 nyawa!'}
+    G.score+=pts;msg=['Hebat! 🎉','Pintar! 👏','Benar! 🌟'][Math.floor(Math.random()*3)]+` +${pts}`+extra;
+  }else{
+    G.streak=0;G.lives--;G.miss.push(w);msg=i<0?'Waktu habis! ⏰':'Hampir! Yuk lihat artinya 💪';
+  }
+  document.querySelectorAll('.opt').forEach((b,k)=>{b.disabled=true;if(q.opts[k]===w)b.classList.add('ok');else if(k===i)b.classList.add('no')});
+  const m=$('ms');if(m)m.classList.add(ok?'hop':'shake');
+  $('hr').textContent=hearts();$('sc').textContent='⭐ '+G.score;
+  const last=G.lives<=0||G.i+1>=G.qs.length;
+  $('fb').innerHTML=`<div class="card fb"><div style="font-weight:bold;font-size:20px;color:${ok?'#2e9b4a':'#d1392b'}">${msg}</div>
+  <div class="w">${w.e} ${esc(w.w)} = ${esc(w.a)}</div><div class="sent" style="font-size:19px">${hl(w.s)}</div><div class="tr">${esc(w.t)}</div>
+  ${tts?'<button class="spk" onclick="speak(G.q.w.w+\'. \'+G.q.w.s.replace(/[\\[\\]]/g,\'\'))">🔊</button>':''}</div>
+  <button class="btn g" onclick="nextQ()">${last?'Selesai 🏁':'Lanjut ▶'}</button>`;
+}
+function nextQ(){
+  if(G.lives<=0)return endRound('lives');
+  if(G.i+1>=G.qs.length)return endRound('done');
+  G.i++;showQ();
+}
+function endRound(why){
+  G.run=false;const n=G.qs.length;
+  const bonus=(G.lives>0?G.lives*50:0)+Math.max(0,Math.floor(G.rLeft));
+  G.score+=bonus;const pct=G.correct/n,st=pct>=1?3:pct>=.8?2:pct>=.6?1:0;
+  const p=me(),b=D.best[p.id]=D.best[p.id]||{};let nb=false;
+  if(!b[G.z]||G.score>b[G.z].s){b[G.z]={s:G.score,st:Math.max(st,b[G.z]?b[G.z].st:0)};nb=true}
+  else if(st>b[G.z].st)b[G.z].st=st;
+  save();
+  const title={done:'Ronde selesai! 🎉',lives:'Yah, nyawa habis. Yuk coba lagi! 💪',time:'Waktu ronde habis! ⏰'}[why];
+  const z=G.z;
+  app.innerHTML=`<div class="mascot">${st>=2?'🥳':'🤗'}</div><h2>${title}</h2>
+  <div class="card" style="text-align:center"><div class="stars" style="font-size:42px">${stars(st)}</div>
+  <div style="font-size:34px;font-weight:bold">⭐ ${G.score}</div>
+  ${nb?'<div style="color:#2e9b4a;font-weight:bold">🏅 Skor terbaikmu!</div>':''}
+  <div class="lbl">Benar ${G.correct} dari ${n} · Bonus akhir +${bonus}</div></div>
+  ${G.miss.length?`<div class="card miss"><b>📝 Kata yang perlu diulang:</b>${G.miss.map(w=>`<div>${w.e} <b>${esc(w.w)}</b> = ${esc(w.a)}</div>`).join('')}</div>`:''}
+  <button class="btn" onclick="startRound(${z})">🔁 Main lagi</button>
+  <button class="btn g" onclick="mapScreen()">🗺️ Peta Safari</button>
+  <button class="btn s" onclick="lbScreen(${z})">🏆 Leaderboard</button>`;
+  G=null;
+}
+
+/* ===== LEADERBOARD ===== */
+function lbScreen(sel){
+  const rows=[];
+  D.profiles.forEach(p=>{const b=D.best[p.id]||{};
+    if(sel==='all'){let s=0,t=0;for(let z=1;z<=10;z++)if(b[z]){s+=b[z].s;t+=b[z].st}if(s)rows.push({p,s,t,l:'⭐'+t+'/30'})}
+    else if(b[sel])rows.push({p,s:b[sel].s,t:b[sel].st,l:stars(b[sel].st)})});
+  rows.sort((a,b)=>b.s-a.s);const top=rows.slice(0,10);
+  app.innerHTML=`<h2>🏆 Leaderboard</h2>
+  <select onchange="lbScreen(this.value==='all'?'all':+this.value)">
+  <option value="all"${sel==='all'?' selected':''}>Keseluruhan (zona 1–10)</option>
+  ${Z.map((z,i)=>`<option value="${i+1}"${sel===i+1?' selected':''}>${i+1}. ${z.n}</option>`).join('')}
+  <option value="0"${sel===0?' selected':''}>🎲 Safari Acak</option></select>
+  <div class="card">${top.length?`<table>${top.map((r,i)=>`<tr><td>${['🥇','🥈','🥉'][i]||i+1}</td><td style="font-size:26px">${r.p.av}</td><td><b>${esc(r.p.name)}</b></td><td style="text-align:right"><b>${r.s}</b><br><span class="stars" style="font-size:14px">${r.l}</span></td></tr>`).join('')}</table>`:'<div class="lbl">Belum ada skor. Yuk main dulu!</div>'}</div>
+  <button class="btn g" onclick="mapScreen()">🗺️ Kembali ke Peta</button>`;
+}
+
+/* ===== MULAI ===== */
+D.cur&&me()?mapScreen():profileScreen();
+</script>
+</body>
+</html>
